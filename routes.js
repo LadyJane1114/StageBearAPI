@@ -58,4 +58,19 @@ router.get('/:id', async (req, res) => {
 
 });
 
+//POST: /api/shows
+router.post('/', async (req,res) => {
+    const show = req.body;
+
+    await sql.connect(dbConnectionString);
+
+    const result = await sql.query`INSERT INTO [dbo].[Purchase]
+        (TicketsPurchased, DatePurchased, ClientFName, ClientLName, ClientStAddress, ClientCity, ClientRegion, ClientCountry, ClientPostCode, ClientEmail, ClientPhone, CardNum, CardExpMon, CardExpYear, CardSecCode, ShowID)
+        VALUES
+        (${show.TicketsPurchased},GETDATE(),${show.ClientFName},${show.ClientLName},${show.ClientStAddress},${show.ClientCity},${show.ClientRegion},${show.ClientCountry},${show.ClientPostCode},${show.ClientEmail},${show.ClientPhone},${show.CardNum},${show.CardExpMon},${show.CardExpYear},${show.CardSecCode},${show.ShowID})`;
+
+
+    res.json({message: 'Purchase added successfully'});
+});
+
 export default router;
