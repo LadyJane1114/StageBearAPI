@@ -69,7 +69,10 @@ router.post('/', async (req,res) => {
         VALUES
         (${show.TicketsPurchased},GETDATE(),${show.ClientFName},${show.ClientLName},${show.ClientStAddress},${show.ClientCity},${show.ClientRegion},${show.ClientCountry},${show.ClientPostCode},${show.ClientEmail},${show.ClientPhone},${show.CardNum},${show.CardExpMon},${show.CardExpYear},${show.CardSecCode},${show.ShowID})`;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 95bf18c6bb999d6192d7e7ea9f728d0b74645211
     res.json({message: 'Purchase added successfully'});
 });
 
