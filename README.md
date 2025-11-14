@@ -3,7 +3,7 @@ This is the API app that connects with <a href="https://github.com/LadyJane1114/
 
 Front end React app coming soon.
 
-
+<br/>
 
 As is mentioned on the StageBear App page:
 <h1>THIS IS NOT PCI COMPLIANT!</h1>
