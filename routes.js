@@ -64,13 +64,59 @@ router.post('/', async (req,res) => {
 
     await sql.connect(dbConnectionString);
 
-    const result = await sql.query`INSERT INTO [dbo].[Purchase]
-        (TicketsPurchased, DatePurchased, ClientFName, ClientLName, ClientStAddress, ClientCity, ClientRegion, ClientCountry, ClientPostCode, ClientEmail, ClientPhone, CardNum, CardExpMon, CardExpYear, CardSecCode, ShowID)
-        VALUES
-        (${show.TicketsPurchased},GETDATE(),${show.ClientFName},${show.ClientLName},${show.ClientStAddress},${show.ClientCity},${show.ClientRegion},${show.ClientCountry},${show.ClientPostCode},${show.ClientEmail},${show.ClientPhone},${show.CardNum},${show.CardExpMon},${show.CardExpYear},${show.CardSecCode},${show.ShowID})`;
+    const requiredFields = [
+        "TicketsPurchased",
+        "ClientFName",
+        "ClientLName",
+        "ClientStAddress",
+        "ClientCity",
+        "ClientCountry",
+        "ClientPostCode",
+        "ClientEmail",
+        "ClientPhone",
+        "CardNum",
+        "CardExpMon",
+        "CardExpYear",
+        "CardSecCode",
+        "ShowID"
+    ];
+
+        function validateRequiredFields(body, requiredFields) {
+            const missing = [];
+
+            for (const field of requiredFields) {
+                const value = body[field];
+
+                if (
+                    value === undefined ||
+                    value === null ||
+                    value === "" ||
+                    (typeof value === "number" && isNaN(value))
+                ) {
+                    missing.push(field);
+                }
+            }
+
+            return missing;
+        }
 
 
-    res.json({message: 'Purchase added successfully'});
+        const missingFields = validateRequiredFields(show, requiredFields);
+
+        if (missingFields.length > 0) {
+            return res.status(400).json({
+                message: `Missing required fields: ${missingFields.join(", ")}`
+            });
+        }
+
+        const result = await sql.query`
+            INSERT INTO [dbo].[Purchase]
+            (TicketsPurchased, DatePurchased, ClientFName, ClientLName, ClientStAddress, ClientCity, ClientRegion, ClientCountry, ClientPostCode, ClientEmail, ClientPhone, CardNum, CardExpMon, CardExpYear, CardSecCode, ShowID)
+            VALUES
+            (${show.TicketsPurchased}, GETDATE(), ${show.ClientFName}, ${show.ClientLName}, ${show.ClientStAddress}, ${show.ClientCity}, ${show.ClientRegion}, ${show.ClientCountry}, ${show.ClientPostCode}, ${show.ClientEmail}, ${show.ClientPhone}, ${show.CardNum}, ${show.CardExpMon}, ${show.CardExpYear}, ${show.CardSecCode}, ${show.ShowID})
+        `;
+
+    res.json({ message: 'Purchase added successfully' });
 });
 
 export default router;
