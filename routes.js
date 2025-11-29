@@ -73,7 +73,6 @@ router.post('/', async (req,res) => {
         "ClientCountry",
         "ClientPostCode",
         "ClientEmail",
-        "ClientPhone",
         "CardNum",
         "CardExpMon",
         "CardExpYear",
